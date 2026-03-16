@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Library Seat Booking</title>
+
+<style>
+
+body{
+font-family:Segoe UI;
+margin:0;
+background:linear-gradient(135deg,#2c003e,#6a0dad);
+color:white;
+}
+
+header{
+text-align:center;
+padding:30px;
+font-size:30px;
+font-weight:bold;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+text-align:center;
+padding:20px;
+}
+
+.card{
+background:rgba(255,255,255,0.08);
+padding:30px;
+border-radius:15px;
+backdrop-filter:blur(10px);
+}
+
+.seats{
+display:grid;
+grid-template-columns:repeat(8,60px);
+gap:12px;
+justify-content:center;
+margin-top:25px;
+}
+
+.seat{
+width:60px;
+height:60px;
+background:#9b59b6;
+border-radius:10px;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+font-weight:bold;
+transition:0.3s;
+}
+
+.seat:hover{
+transform:scale(1.1);
+}
+
+.selected{
+background:#f1c40f;
+}
+
+.booked{
+background:#e74c3c;
+cursor:not-allowed;
+}
+
+input{
+padding:10px;
+border:none;
+border-radius:6px;
+margin-top:20px;
+width:200px;
+}
+
+button{
+padding:10px 20px;
+margin-left:10px;
+background:#a64bf4;
+border:none;
+color:white;
+border-radius:6px;
+cursor:pointer;
+}
+
+.legend{
+margin-top:20px;
+}
+
+.box{
+width:15px;
+height:15px;
+display:inline-block;
+margin-right:5px;
+}
+
+footer{
+margin-top:40px;
+text-align:center;
+color:#ddd;
+font-size:14px;
+padding-bottom:20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header> Library Seat Booking
+</header>
+
+<div class="container">
+
+<div class="card">
+
+<h2>Select Your Seat</h2>
+
+<div class="seats" id="seatContainer"></div>
+
+<div class="legend">
+<p>
+<span class="box" style="background:#9b59b6"></span>Available
+&nbsp;&nbsp;
+<span class="box" style="background:#f1c40f"></span>Selected
+&nbsp;&nbsp;
+<span class="box" style="background:#e74c3c"></span>Booked
+</p>
+</div>
+
+<input type="text" id="name" placeholder="Enter your name">
+
+<button onclick="bookSeat()">Book Seat</button>
+
+</div>
+
+</div>
+
+<footer>
+Developed by Jayshri Gautam
+</footer>
+
+<script>
+
+let container=document.getElementById("seatContainer");
+let selectedSeat=null;
+
+for(let i=1;i<=40;i++){
+
+let seat=document.createElement("div");
+seat.classList.add("seat");
+seat.innerText=i;
+
+seat.onclick=function(){
+
+if(seat.classList.contains("booked")) return;
+
+document.querySelectorAll(".seat").forEach(s=>s.classList.remove("selected"));
+
+seat.classList.add("selected");
+
+selectedSeat=seat;
+
+}
+
+container.appendChild(seat);
+
+}
+
+function bookSeat(){
+
+let name=document.getElementById("name").value;
+
+if(!selectedSeat){
+alert("Please select a seat");
+return;
+}
+
+if(name===""){
+alert("Enter your name");
+return;
+}
+
+selectedSeat.classList.remove("selected");
+selectedSeat.classList.add("booked");
+selectedSeat.innerText="X";
+
+alert("Seat booked for "+name);
+
+}
+
+</script>
+
+</body>
+</html>
