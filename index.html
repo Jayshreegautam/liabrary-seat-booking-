@@ -2,324 +2,287 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Library Management System</title>
+<title>Library | Study Space & Seat Booking</title>
+
+<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- QR Code library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
 <style>
-/* --- General Styles --- */
-body{
-  font-family: 'Segoe UI', sans-serif;
-  margin:0; padding:0;
-  scroll-behavior:smooth;
-  background:linear-gradient(135deg,#2c003e,#6a0dad);
-  color:#eee;
-}
-header{
-  position:fixed; top:0; width:100%; background:rgba(0,0,0,0.8);
-  padding:15px 20px; z-index:1000;
-  display:flex; justify-content:space-between; align-items:center;
-}
-header h1{ font-size:1.5rem; margin:0;}
-nav a{
-  color:#fff; text-decoration:none; margin-left:15px; font-weight:bold;
-  transition:0.3s;
-}
-nav a:hover{ color:#7b5cff; }
-section{
-  min-height:100vh; padding:100px 20px 50px 20px;
-}
-.container{
-  max-width:1000px; margin:auto;
-}
-.card{
-  background:rgba(255,255,255,0.08);
-  padding:25px; border-radius:12px; backdrop-filter:blur(8px);
-  margin-bottom:30px;
-}
-/* --- Seat Styles --- */
-.screen{ width:70%; height:35px; background:#ddd; color:#2c003e;
-  margin:20px auto 30px auto; border-radius:8px;
-  display:flex; align-items:center; justify-content:center; font-weight:bold; letter-spacing:1px;
-  box-shadow:0 1px 5px rgba(0,0,0,0.3);
-}
-.seat-row{ display:flex; justify-content:center; align-items:center; margin-bottom:6px; }
-.row-label{ width:18px; text-align:right; margin-right:8px; font-weight:bold; }
-.seat{ width:45px; height:45px; background:#2ecc71; border-radius:8px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:bold; font-size:0.85rem; transition:0.25s ease; }
-.seat:hover{ transform:scale(1.1); box-shadow:0 0 6px rgba(255,255,255,0.5); }
-.selected{ background:#f1c40f; box-shadow:0 0 10px rgba(241,196,15,0.8); }
-.booked{ background:#e74c3c; cursor:not-allowed; color:white; font-weight:bold; }
-input, select{ padding:8px; border:none; border-radius:6px; margin-top:15px; width:180px; }
-button{ padding:8px 18px; margin:8px; background:#7b5cff; border:none; color:white; border-radius:6px; cursor:pointer; transition:0.3s; }
-button:hover{ background:#6741d9; }
-#info{ margin-top:12px; color:#ccc; font-size:0.85rem; }
-.legend{ margin-top:15px; }
-.box{ width:12px; height:12px; display:inline-block; margin-right:4px; }
-/* --- Popup --- */
-#popup{ display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(30,30,30,0.95); color:white; padding:25px; border-radius:10px; box-shadow:0 0 12px rgba(0,0,0,0.5); z-index:1000; text-align:center; }
-#popup button{ background:#7b5cff; color:white; border:none; padding:8px 18px; border-radius:8px; cursor:pointer; font-weight:bold; margin-top:10px; }
-#popup button:hover{ background:#6741d9; }
-/* --- Analytics --- */
-.analytics{ display:flex; justify-content:space-around; flex-wrap:wrap; margin-top:30px; }
-.chart-card{ background:rgba(255,255,255,0.08); padding:20px; border-radius:12px; backdrop-filter:blur(8px); width:300px; margin:15px; }
-/* --- Chatbot --- */
-#chatbot{
-  position:fixed; bottom:20px; right:20px; width:260px; background:#1e1e2f; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.5); overflow:hidden; z-index:1000;
-}
-#chatHeader{ background:#7b5cff; padding:10px; text-align:center; font-weight:bold; display:flex; justify-content:space-between; align-items:center; }
-#chatHeader span{ cursor:pointer; font-weight:bold; }
-#chatBox{ height:200px; overflow-y:auto; padding:10px; font-size:0.85rem; color:#eee; }
-#chatInput{ width:70%; border:none; padding:8px; border-radius:4px; margin:5px;}
-#chatbot button{ width:28%; border:none; background:#7b5cff; color:white; margin-left:2%; border-radius:4px; cursor:pointer; }
-#chatbot button:hover{ background:#6741d9; }
-/* --- Footer --- */
-footer{ text-align:center; color:#bbb; font-size:13px; padding:30px 0; background:rgba(0,0,0,0.7); }
-/* --- Responsive --- */
-@media(max-width:500px){ .seat{ width:38px; height:38px; font-size:0.75rem;} input, select{ width:150px; } button{ padding:6px 14px; margin:4px; } #chatbot{width:200px;} #chatInput{width:65%;} #chatbot button{width:30%;} }
+*{box-sizing:border-box;}
+body,html{margin:0;padding:0;width:100%;font-family:'Segoe UI',sans-serif;}
+a{text-decoration:none;color:inherit;}
+button{cursor:pointer;}
+
+body{background:#f5f5f5;color:#222;}
+.container{max-width:1200px;margin:auto;padding:0 20px;}
+
+/* HEADER */
+header{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(0,0,0,0.85);color:white;padding:15px 0;}
+header .container{display:flex;align-items:center;justify-content:space-between;}
+header nav a{margin:0 15px;font-weight:bold;color:white;}
+header nav a:hover{color:#ffca28;}
+
+/* HERO */
+#hero{height:calc(100vh - 60px);margin-top:60px;background:#3f51b5; display:flex;align-items:center;justify-content:center;text-align:center;color:white;}
+#hero h1{font-size:3rem;margin-bottom:15px;}
+#hero p{font-size:1.2rem;margin-bottom:20px;}
+#hero button{padding:10px 25px;font-size:1rem;border:none;border-radius:6px;background:#ffca28;color:#222;}
+
+/* FEATURES */
+#features{padding:50px 0;background:white;text-align:center;}
+#features h2{margin-bottom:20px;color:#222;}
+.feature-list{display:flex;flex-wrap:wrap;justify-content:center;}
+.feature-item{width:200px;margin:15px;padding:20px;border-radius:8px;background:#fafafa;box-shadow:0 2px 6px rgba(0,0,0,0.1);}
+.feature-item img{width:60px;}
+
+/* GALLERY */
+#gallery{padding:50px 0;text-align:center;}
+#gallery h2{margin-bottom:20px;}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;}
+.gallery-grid img{width:100%;border-radius:8px;}
+
+/* BOOKING */
+#booking{padding:50px 0;background:#fafafa;}
+#booking h2{text-align:center;margin-bottom:20px;}
+.screen{width:70%;height:30px;background:#ddd;color:#222;margin:15px auto;display:flex;align-items:center;justify-content:center;border-radius:6px;font-weight:bold;}
+.seat-row{display:flex;justify-content:center;margin-bottom:6px;}
+.seat{width:38px;height:38px;background:#2ecc71;margin:3px;display:flex;align-items:center;justify-content:center;border-radius:6px;cursor:pointer;transition:0.2s;}
+.seat:hover{transform:scale(1.1);}
+.selected{background:#f1c40f;}
+.booked{background:#e74c3c;cursor:not-allowed;color:white;font-weight:bold;}
+input,select{padding:8px;margin:5px;border-radius:6px;border:1px solid #ccc;width:calc(100% - 18px);}
+button{background:#1e88e5;color:white;border:none;border-radius:6px;padding:8px 14px;margin:8px;}
+
+/* QR CODE */
+#qrCode{margin-top:20px;text-align:center;}
+
+/* ANALYTICS */
+#analytics {padding:30px 0;text-align:center;background:white;}
+#analytics h2 {margin-bottom:15px;font-size:1.6rem;color:#222;}
+#chart {display:block;margin:auto;max-width:100%; height:300px;}
+
+/* TESTIMONIALS */
+#testimonials{padding:50px 0;text-align:center;}
+.testi-list{display:flex;flex-wrap:wrap;justify-content:center;}
+.testi-card{width:250px;background:#fafafa;margin:15px;padding:20px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.1);}
+
+/* CONTACT */
+#contact{padding:50px 0;background:white;text-align:center;}
+#contact iframe{width:100%;height:300px;border:none;border-radius:8px;}
+
+/* FOOTER */
+footer{padding:15px;background:#222;color:#ccc;text-align:center;}
+
+/* CHATBOT */
+#chatbot{position:fixed;bottom:20px;right:20px;width:250px;background:#1e1e2f;border-radius:10px;box-shadow:0 0 8px rgba(0,0,0,0.3);font-size:0.8rem;}
+#chatHeader{background:#1e88e5;color:white;padding:10px;display:flex;justify-content:space-between;}
+#chatBox{padding:10px;height:150px;overflow-y:auto;color:white;background:#2a2a3f;}
+#chatInput{width:60%;padding:6px;border:none;border-radius:4px;}
+#chatbot button{width:32%;margin-left:3%;background:#1e88e5;color:white;border:none;border-radius:4px;}
 </style>
 </head>
+
 <body>
 
+<!-- HEADER -->
 <header>
-  <h1>Library System</h1>
+<div class="container">
+  <div class="logo"><b>Library Vision</b></div>
   <nav>
-    <a href="#home">Home</a>
-    <a href="#about">About</a>
+    <a href="#hero">Home</a>
+    <a href="#features">Features</a>
+    <a href="#gallery">Gallery</a>
     <a href="#booking">Booking</a>
     <a href="#analytics">Analytics</a>
+    <a href="#testimonials">Reviews</a>
     <a href="#contact">Contact</a>
   </nav>
+</div>
 </header>
 
-<section id="home">
-  <div class="container card">
-    <h2>Welcome to Our Library</h2>
-    <p>Explore our reading spaces and book seats easily online. Enjoy VIP sections and quiet study areas.</p>
-  </div>
+<!-- HERO -->
+<section id="hero">
+<div>
+  <h1>Welcome to our Library</h1>
+  <p>Premium Study Space | Seat Booking | Quiet & Secure</p>
+  <button onclick="document.getElementById('booking').scrollIntoView()">Book Now</button>
+</div>
 </section>
 
-<section id="about">
-  <div class="container card">
-    <h2>About Library</h2>
-    <p>Our library provides comfortable study spaces, online seat booking, and analytics for better management.</p>
-  </div>
+<!-- FEATURES -->
+<section id="features">
+<h2>Features & Services</h2>
+<div class="feature-list">
+  <div class="feature-item"><p>Clean Washrooms</p></div>
+  <div class="feature-item"><p>High Speed WiFi</p></div>
+  <div class="feature-item"><p>Secure Surveillance</p></div>
+  <div class="feature-item"><p>Drinking Water</p></div>
+  <div class="feature-item"><p>Study Materials</p></div>
+</div>
 </section>
 
+<!-- GALLERY -->
+<section id="gallery">
+<h2>Gallery</h2>
+<div class="gallery-grid">
+  <img src="https://via.placeholder.com/400x300?text=Library+1">
+  <img src="https://via.placeholder.com/400x300?text=Library+2">
+  <img src="https://via.placeholder.com/400x300?text=Library+3">
+  <img src="https://via.placeholder.com/400x300?text=Library+4">
+</div>
+</section>
+
+<!-- BOOKING -->
 <section id="booking">
-  <div class="container card">
-    <h2>Book Your Seats</h2>
-    <label>Select Date:</label>
-    <input type="date" id="datePicker">
-    <label>Select Time Slot:</label>
-    <select id="timeSlot">
-      <option value="morning">Morning (9AM-12PM)</option>
-      <option value="afternoon">Afternoon (12PM-3PM)</option>
-      <option value="evening">Evening (3PM-6PM)</option>
-    </select>
-    <input type="text" id="name" placeholder="Enter your name">
-    <br>
-    <button onclick="bookSeat()">Book Seat(s)</button>
-    <button onclick="resetSeats()">Reset All</button>
-
-    <div class="screen">SCREEN</div>
-    <div id="seatContainer"></div>
-    <p id="info">Seats Selected: 0 | Total: $0 | Available: 40</p>
-    <div class="legend">
-      <span class="box" style="background:#2ecc71"></span>Available
-      <span class="box" style="background:#f1c40f"></span>Selected
-      <span class="box" style="background:#e74c3c"></span>Booked
-    </div>
-  </div>
+<div class="container card">
+<h2>Book Your Seats</h2>
+<input type="date" id="datePicker">
+<select id="timeSlot">
+  <option value="morning">Morning</option>
+  <option value="afternoon">Afternoon</option>
+  <option value="evening">Evening</option>
+</select>
+<input type="text" id="name" placeholder="Enter your name">
+<br>
+<button onclick="bookSeat()">Book Seat(s)</button>
+<button onclick="resetSeats()">Reset</button>
+<div class="screen">SCREEN</div>
+<div id="seatContainer"></div>
+<p id="info"></p>
+<div id="qrCode"></div>
+</div>
 </section>
 
+<!-- ANALYTICS -->
 <section id="analytics">
-  <div class="container analytics">
-    <div class="chart-card">
-      <h3>Total Bookings</h3>
-      <canvas id="totalBookingsChart"></canvas>
-    </div>
-    <div class="chart-card">
-      <h3>Popular Time Slots</h3>
-      <canvas id="timeSlotChart"></canvas>
-    </div>
-    <div class="chart-card">
-      <h3>Seat Utilization</h3>
-      <canvas id="seatUtilChart"></canvas>
-    </div>
+  <div class="container" style="max-width:600px; margin:auto;">
+    <h2>Seat Analytics</h2>
+    <canvas id="chart" style="max-width:100%; height:300px;"></canvas>
   </div>
 </section>
 
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+<h2>What Students Say</h2>
+<div class="testi-list">
+  <div class="testi-card"><p>"Great study environment!"</p><b>- Student 1</b></div>
+  <div class="testi-card"><p>"Peaceful & clean space."</p><b>- Student 2</b></div>
+  <div class="testi-card"><p>"Comfortable seats & fast wifi."</p><b>- Student 3</b></div>
+</div>
+</section>
+
+<!-- CONTACT -->
 <section id="contact">
-  <div class="container card">
-    <h2>Contact Us</h2>
-    <p>Email: info@library.com | Phone: +91 1234567890</p>
-  </div>
+<h2>Contact Us</h2>
+<p>Email: info@library.com | Phone: +91 1234567890</p>
+<iframe src="https://maps.google.com/maps?q=Your+City&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe>
 </section>
 
-<div id="popup">
-  <h3>Booking Summary</h3>
-  <p id="popupText"></p>
-  <button onclick="closePopup()">Close</button>
-</div>
-
+<!-- AI CHATBOT -->
 <div id="chatbot">
-  <div id="chatHeader">
-    AI Assistant 🤖
-    <span onclick="closeChatbot()">✖</span>
-  </div>
-  <div id="chatBox"></div>
-  <input type="text" id="chatInput" placeholder="Ask something...">
-  <button onclick="sendMessage()">Send</button>
+<div id="chatHeader">AI Assistant 🤖 <span onclick="closeChat()">✖</span></div>
+<div id="chatBox"></div>
+<input type="text" id="chatInput" placeholder="Ask something...">
+<button onclick="sendMessage()">Send</button>
 </div>
 
+<!-- FOOTER -->
 <footer>Developed by Jayshri Gautam</footer>
 
 <script>
-// --- Seat Booking Logic ---
+// SEAT BOOKING LOGIC
 let seatContainer = document.getElementById("seatContainer");
-let selectedSeats = [];
-let bookedSeats = {};
-let datePicker = document.getElementById("datePicker");
-let timeSlot = document.getElementById("timeSlot");
-let info = document.getElementById("info");
-let popup = document.getElementById("popup");
-let popupText = document.getElementById("popupText");
-
-let rows = ["A","B","C","D","E"];
-let cols = 8;
-const VIP_PRICE = 20;
-const NORMAL_PRICE = 10;
+let selectedSeats = [], bookedSeats = {};
+let datePicker = document.getElementById("datePicker"),
+    timeSlot = document.getElementById("timeSlot"),
+    info = document.getElementById("info");
+let rows=["A","B","C","D","E"], cols=8;
+const seatPrice = 800;
 datePicker.value = new Date().toISOString().split('T')[0];
 
+let chart = new Chart(document.getElementById("chart"),{
+  type:'doughnut',
+  data:{labels:['Booked','Available'],datasets:[{data:[0,40],backgroundColor:['#e74c3c','#2ecc71']}]},
+  options:{responsive:true, plugins:{legend:{position:'bottom'}}}
+});
+
+function updateChart(){
+  let key = datePicker.value + "_" + timeSlot.value;
+  let data = JSON.parse(localStorage.getItem(key))||{};
+  let bookedCount = Object.keys(data).length;
+  let total = rows.length * cols;
+  chart.data.datasets[0].data = [bookedCount, total - bookedCount];
+  chart.update();
+  info.innerText = `Booked: ${bookedCount} | Available: ${total - bookedCount}`;
+}
+
 function loadSeats(){
-  seatContainer.innerHTML = "";
-  selectedSeats = [];
-  let key = datePicker.value+"_"+timeSlot.value;
-  bookedSeats = JSON.parse(localStorage.getItem(key)) || {};
-  updateCounter();
+  seatContainer.innerHTML=""; selectedSeats=[];
+  let key = datePicker.value + "_" + timeSlot.value;
+  bookedSeats = JSON.parse(localStorage.getItem(key))||{};
   rows.forEach(r=>{
-    let rowDiv = document.createElement("div");
-    rowDiv.classList.add("seat-row");
-    let label = document.createElement("div");
-    label.classList.add("row-label");
-    label.innerText = r;
-    rowDiv.appendChild(label);
+    let rowDiv = document.createElement("div"); rowDiv.className="seat-row";
     for(let c=1;c<=cols;c++){
-      let seatNum = r+c;
-      let seat = document.createElement("div");
-      seat.classList.add("seat"); seat.innerText=c;
-      seat.title = `Seat ${seatNum} - Price: $${(r==="A"||r==="B")?VIP_PRICE:NORMAL_PRICE}`;
-      if(bookedSeats[seatNum]){ seat.classList.add("booked"); seat.innerText="X"; }
+      let seatNum = r+c, seat = document.createElement("div");
+      seat.className="seat"; seat.innerText=c; seat.title=`Seat ${seatNum}`;
+      if(bookedSeats[seatNum]) seat.classList.add("booked");
       seat.onclick = function(){
         if(seat.classList.contains("booked")) return;
-        if(seat.classList.contains("selected")){
-          seat.classList.remove("selected");
-          selectedSeats = selectedSeats.filter(s=>s!==seatNum);
-        } else { seat.classList.add("selected"); selectedSeats.push(seatNum);}
-        updateCounter();
-      }
+        seat.classList.toggle("selected");
+        selectedSeats.includes(seatNum) ? selectedSeats = selectedSeats.filter(s=>s!==seatNum) : selectedSeats.push(seatNum);
+      };
       rowDiv.appendChild(seat);
     }
     seatContainer.appendChild(rowDiv);
   });
+  updateChart();
 }
 
-function calculateTotal(){ return selectedSeats.reduce((sum,s)=>((s[0]==="A"||s[0]==="B")?sum+VIP_PRICE:sum+NORMAL_PRICE),0);}
-function updateCounter(){ 
-  let total = calculateTotal();
-  let key = datePicker.value+"_"+timeSlot.value;
-  let bookedCount = Object.keys(JSON.parse(localStorage.getItem(key))||{}).length;
-  info.innerText = `Seats Selected: ${selectedSeats.length} | Total: $${total} | Available: ${rows.length*cols - bookedCount}`;
-  updateAnalytics();
-}
+function calculateTotal(){ return selectedSeats.length * seatPrice; }
+
 function bookSeat(){
   let name = document.getElementById("name").value.trim();
-  if(selectedSeats.length===0){ alert("Select seat(s)"); return;}
-  if(name===""){ alert("Enter your name"); return; }
-  let key = datePicker.value+"_"+timeSlot.value;
-  bookedSeats = JSON.parse(localStorage.getItem(key)) || {};
-  let bookingID = "BK"+Math.floor(Math.random()*10000);
-  selectedSeats.forEach(s=>bookedSeats[s]={name,id:bookingID});
-  localStorage.setItem(key, JSON.stringify(bookedSeats));
-  popupText.innerText = `Booking ID: ${bookingID}\nName: ${name}\nDate: ${datePicker.value}\nTime Slot: ${timeSlot.value}\nSeats: ${selectedSeats.join(", ")}\nTotal Cost: $${calculateTotal()}`;
-  popup.style.display="block";
-  selectedSeats = [];
-  document.getElementById("name").value = "";
+  if(selectedSeats.length===0 || name===""){ alert("Select seats & enter name!"); return; }
+  let key = datePicker.value + "_" + timeSlot.value;
+  let data = JSON.parse(localStorage.getItem(key)) || {};
+  selectedSeats.forEach(s=>data[s]=name);
+  localStorage.setItem(key, JSON.stringify(data));
+  let totalPrice = calculateTotal();
+  alert(`Seats Booked! Total ₹${totalPrice}`);
+
+  // Generate QR Code
+  let qrText = `Name: ${name}\nDate: ${datePicker.value}\nTime: ${timeSlot.value}\nSeats: ${selectedSeats.join(', ')}\nTotal: ₹${totalPrice}`;
+  document.getElementById("qrCode").innerHTML = "";
+  new QRCode(document.getElementById("qrCode"), {text: qrText, width:150, height:150});
+
   loadSeats();
 }
-function resetSeats(){ let key = datePicker.value+"_"+timeSlot.value; if(confirm("Reset all seats for "+datePicker.value+" "+timeSlot.value+"?")){ localStorage.removeItem(key); loadSeats(); }}
-function closePopup(){ popup.style.display="none"; }
 
-// --- Analytics ---
-const totalCtx = document.getElementById("totalBookingsChart").getContext("2d");
-const totalChart = new Chart(totalCtx,{type:'doughnut',data:{labels:['Booked','Available'],datasets:[{data:[0,1],backgroundColor:['#e74c3c','#2ecc71']}]}});
-
-const slotCtx = document.getElementById("timeSlotChart").getContext("2d");
-const slotChart = new Chart(slotCtx,{type:'bar',data:{labels:['Morning','Afternoon','Evening'],datasets:[{label:'Bookings',data:[0,0,0],backgroundColor:'#7b5cff'}]},options:{scales:{y:{beginAtZero:true}}}});
-
-const seatUtilCtx = document.getElementById("seatUtilChart").getContext("2d");
-const seatUtilChart = new Chart(seatUtilCtx,{type:'doughnut',data:{labels:['Booked','Available'],datasets:[{data:[0,1],backgroundColor:['#e74c3c','#2ecc71']}]}});
-
-function updateAnalytics(){
-  let allKeys = Object.keys(localStorage).filter(k=>k.includes("_"));
-  let totalBookings = allKeys.reduce((sum,key)=>sum+Object.keys(JSON.parse(localStorage.getItem(key))||{}).length,0);
-  let slotCounts = {morning:0, afternoon:0, evening:0};
-  allKeys.forEach(k=>{ let b = JSON.parse(localStorage.getItem(k)||{}); let slot = k.split("_")[1]; slotCounts[slot]+=Object.keys(b).length; });
-  let totalSeats = rows.length*cols*allKeys.length;
-  let utilizedSeats = allKeys.reduce((sum,key)=>sum+Object.keys(JSON.parse(localStorage.getItem(key)||{})).length,0);
-  totalChart.data.datasets[0].data=[totalBookings,totalSeats-totalBookings]; totalChart.update();
-  slotChart.data.datasets[0].data=[slotCounts.morning,slotCounts.afternoon,slotCounts.evening]; slotChart.update();
-  seatUtilChart.data.datasets[0].data=[utilizedSeats,totalSeats-utilizedSeats]; seatUtilChart.update();
-}
-
-datePicker.addEventListener("change", loadSeats);
-timeSlot.addEventListener("change", loadSeats);
+function resetSeats(){localStorage.removeItem(datePicker.value+"_"+timeSlot.value); loadSeats();}
+datePicker.addEventListener('change',loadSeats);
+timeSlot.addEventListener('change',loadSeats);
 loadSeats();
 
-// --- AI Chatbot ---
+// CHATBOT LOGIC
 function sendMessage(){
-  let input = document.getElementById("chatInput");
-  let msg = input.value.trim();
-  if(msg==="") return;
-
-  addMessage("You", msg);
-  input.value="";
-
-  let reply = getAIResponse(msg.toLowerCase());
-  setTimeout(()=> addMessage("AI", reply), 500);
+  let input = document.getElementById("chatInput"), msg=input.value.trim();
+  if(!msg) return; addMessage("You",msg); input.value="";
+  setTimeout(()=>addMessage("AI",getAIResponse(msg.toLowerCase())),300);
 }
-
-function closeChatbot(){
-  document.getElementById("chatbot").style.display = "none";
+function addMessage(sender,text){
+  let chatBox=document.getElementById("chatBox"), div=document.createElement("div");
+  div.innerHTML=`<b>${sender}:</b> ${text}`;
+  chatBox.appendChild(div); chatBox.scrollTop=chatBox.scrollHeight;
 }
-
-function addMessage(sender, text){
-  let chatBox = document.getElementById("chatBox");
-  let div = document.createElement("div");
-  div.innerHTML = `<b>${sender}:</b> ${text}`;
-  chatBox.appendChild(div);
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
-
 function getAIResponse(msg){
-  if(msg.includes("available") || msg.includes("seat")){
-    let key = datePicker.value+"_"+timeSlot.value;
-    let booked = Object.keys(JSON.parse(localStorage.getItem(key))||{}).length;
-    let total = rows.length * cols;
-    return `Available seats: ${total - booked}`;
-  }
-  if(msg.includes("price") || msg.includes("cost")){
-    return "VIP Seats (Row A & B): $20 | Normal Seats: $10";
-  }
-  if(msg.includes("book")){
-    return "To book: Select seats → Enter name → Click 'Book Seat'";
-  }
-  if(msg.includes("time")){
-    return "Available slots: Morning, Afternoon, Evening";
-  }
-  if(msg.includes("hi") || msg.includes("hello")){
-    return "Hello! How can I help you with seat booking?";
-  }
-  return "Sorry, I didn't understand. Try asking about seats, price, or booking.";
+  if(msg.includes("available")) return "Check the booking section to see available seats.";
+  if(msg.includes("price")) return `Each seat costs ₹${seatPrice} per slot.`;
+  if(msg.includes("book")) return "Use the booking section above to reserve your seats.";
+  return "Sorry, I didn't understand. Try asking about seats, price, or availability.";
 }
+function closeChat(){document.getElementById("chatbot").style.display="none";}
 </script>
 
 </body>
